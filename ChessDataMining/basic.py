@@ -15,10 +15,10 @@ import chess.pgn # parsing du fichier pgn
 import chess.uci # moteur de jeu
 
 # donnes de jeu -- fichier pgn
-pgn = open("data/pgn/testElo.pgn")
+pgn = open("data/pgn/large.pgn")
 
 # fichier de sortie avec les tables
-output = open("data/output/result", "w")
+output = open("data/output/test2", "w")
 
 # moteur  Oracle
 engine = chess.uci.popen_engine("stockfish/Linux/stockfish_8_x64")
@@ -47,10 +47,11 @@ while(execute):
         
         white = current.headers["White"]
         black = current.headers["Black"]
+
         print ("++ Game ++")
         print ("White : " + white)
         print ("Black : " + black)
-        
+
         whiteElo = current.headers["WhiteElo"]
         blackElo = current.headers["BlackElo"]        
         
@@ -76,7 +77,9 @@ while(execute):
         #init des attributs de la partie     
         
         # nombre de coup
-        nbcoup = 0              
+        nbcoup = 0
+        nbW = 0
+        nbB = 0              
         
         # score Oracle -- represente en moyenne pour la partie le ratio de coup Joueur proches des coups Oracle
         scoreW = 0              
@@ -126,15 +129,21 @@ while(execute):
             # incrementation du nombre de coup -- a modifier
             nbcoup += 1
             player = colors[i]
-            print(nbcoup)
+            
+            if(player == "W"):
+                nbW += 1
+            else:
+                nbB += 1
+    
+            #print(nbcoup)
             # node
             next_node = node.variation(0)
             pgn_move = node.board().san(next_node.move)
-            print(node.board().san(next_node.move))
+            #print(node.board().san(next_node.move))
             
             # coup joue
             move = chess.Move.uci(next_node.move)
-            print(move)
+            # print(move)
             
             # recuperation de la premiere piece sup jouee
             pieces = 'KQRBN'
@@ -163,19 +172,28 @@ while(execute):
             oracle_move = engine.go()   # movetime = 2000 -- init la recherche pour 2000 milliseconds -- non interessant pour l'ampleur du fichier -- 20K+ lignes
             best_move = oracle_move.bestmove
             if(str(move) == str(best_move)):
-                print("best")
+                # print("best")
+                # si le coup joue correspond au coup oracle
+                # on augmente de 1 le score Oracle du joueur
+                # on augmente de 1 la serie de coup en accord avec l'Oracle
                 if(player == "W"):
-                    white_serie += 1
-                    scoreB += 1
-                else:
-                    black_serie += 1
                     scoreW += 1
+                    white_serie += 1
+                else:
+                    scoreB += 1
+                    black_serie += 1
+                # print("w" + str(white_serie))
+                # print("b" + str(black_serie))
             else:
+                # si le coup joue ne correspond pas
+                # on fixe un max temporaire et on reset la serie
                 if(player == "W"):
-                    maxW = white_serie
+                    if(maxW < white_serie):
+                        maxW = white_serie
                     white_serie = 0
                 else:
-                    maxB = black_serie
+                    if(maxB < black_serie):
+                        maxB = black_serie
                     black_serie = 0
                 
             
@@ -186,25 +204,55 @@ while(execute):
             
             engine.position(board)
             current_score = info_handler.info["score"][1].cp
-            print(current_score)
+            #print(current_score)
             
-            print("")
+            #print("")
             i = (i+1)%2
             node = next_node
         
         
         """
         calcul des donnees
-        """        
-        scoreW =  float("{0:.2f}".format(scoreW / nbcoup))
-        scoreB = float("{0:.2f}".format(scoreB / nbcoup))
+        """
+        print(scoreW)
+        print(white_serie)
+        print(maxW)        
+        scoreW =  float("{0:.2f}".format(scoreW / nbW))
+        scoreB = float("{0:.2f}".format(scoreB / nbB))
         
+        # traduction de l'icon de la premiere piece jouee en code
+        codepW = 0
+        codepB = 0
+        
+        if(firstW == 'K'):
+            codepW = 0
+        elif(firstW == 'Q'):
+            codepW = 1
+        elif(firstW == 'R'):
+            codepW = 2
+        elif(firstW == 'B'):
+            codepW = 3
+        elif(firstW == 'N'):
+            codepW = 4
+                
+            
+        if(firstB == 'K'):
+            codepB = 0
+        elif(firstB == 'Q'):
+            codepB = 1
+        elif(firstB == 'R'):
+            codepB = 2
+        elif(firstB == 'B'):
+            codepB = 3
+        elif(firstB == 'N'):
+            codepB = 4
+                
         """
         ecriture des resultats
         structure : Classe ; moyenneOracle ; pluslongueserie ; nombrecoups ; ouverture ; premierepiece ; 
         """
-        lineW = str(classWhite) + ";" + str(scoreW) + ";" + str(max(white_serie, maxW)) + ";" + str(nbcoup) + ";" + str(eco) + ";" + str(firstW) + "\n"
-        lineB = str(classBlack) + ";" + str(scoreB) + ";" + str(max(black_serie, maxB)) + ";" + str(nbcoup) + ";" + str(eco) + ";" + str(firstB) + "\n"
+        lineW = str(classWhite) + ";" + str(scoreW) + ";" + str(max(white_serie, maxW)) + ";" + str(nbW) + ";" + str(eco) + ";" + str(codepW) + "\n"
+        lineB = str(classBlack) + ";" + str(scoreB) + ";" + str(max(black_serie, maxB)) + ";" + str(nbB) + ";" + str(eco) + ";" + str(codepB) + "\n"
         
         output.write(lineW)
         output.write(lineB)
