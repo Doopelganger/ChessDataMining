@@ -14,6 +14,9 @@ import chess
 import chess.pgn # parsing du fichier pgn
 import chess.uci # moteur de jeu
 
+import parser
+from parser import *
+
 # donnes de jeu -- fichier pgn
 pgn = open("data/pgn/large.pgn")
 
@@ -251,8 +254,11 @@ while(execute):
         ecriture des resultats
         structure : Classe ; moyenneOracle ; pluslongueserie ; nombrecoups ; ouverture ; premierepiece ; 
         """
-        lineW = str(classWhite) + ";" + str(scoreW) + ";" + str(max(white_serie, maxW)) + ";" + str(nbW) + ";" + str(eco) + ";" + str(codepW) + "\n"
-        lineB = str(classBlack) + ";" + str(scoreB) + ";" + str(max(black_serie, maxB)) + ";" + str(nbB) + ";" + str(eco) + ";" + str(codepB) + "\n"
+        
+        eco = convert(eco)
+        
+        lineW = str(classWhite) + ";" + str(scoreW) + ";" + str(max(white_serie, maxW)) + ";" + str(nbW) + ";" + str(eco) + ";" + str(codepW) + '\n'
+        lineB = str(classBlack) + ";" + str(scoreB) + ";" + str(max(black_serie, maxB)) + ";" + str(nbB) + ";" + str(eco) + ";" + str(codepB) + '\n'
         
         output.write(lineW)
         output.write(lineB)
