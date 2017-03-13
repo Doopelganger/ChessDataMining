@@ -39,14 +39,20 @@ while(continuer):
 clf = tree.DecisionTreeClassifier()
 clf = clf.fit(X, Y)
 
-# test1 = clf.predict(['0.60', '9', '80', '350', '3'])
-# test2 = clf.predict(['0.30', '2', '63', '350', '3'])
-# test3 = clf.predict(['0.60', '5', '48', '353', '4'])
+test1 = clf.predict(['0.30', '3', '80', '350', '3'])
+test2 = clf.predict(['0.27', '4', '63', '350', '3'])
+test3 = clf.predict(['0.45', '6', '48', '353', '4'])
+print('')
 
+print(test1)
+print(test2)
+print(test3)
+print('')
+print("Classification pour Training Dummy : ", max(test1, test2, test3))
+print('')
 
 # separation des donnees pour test
 X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size = 0.3, random_state = 0)
-
 
 clf = svm.SVC(kernel='linear', C=1)
 
@@ -59,6 +65,8 @@ print("precision : ", precision)
 
 ecart_type = "{0:.2f}".format(scores.std()*2)
 print("ecart_type (confidence interval) : ", ecart_type)
+
+print('')
 
 
 # rappel = nombre de doc correctement attribués a la classe i / nombre de doc de classe i
