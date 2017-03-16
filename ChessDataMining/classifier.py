@@ -10,9 +10,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 from sklearn import datasets
 from sklearn import svm
+from sklearn import metrics
 
 
-data = open("data/output/test2", 'r')
+data = open("data/output/testElo", 'r')
 
 continuer = True
 
@@ -52,12 +53,12 @@ print("Classification pour Training Dummy : ", max(test1, test2, test3))
 print('')
 
 # separation des donnees pour test
-X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size = 0.3, random_state = 0)
+X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size = 0.2, random_state = 0)
 
 clf = svm.SVC(kernel='linear', C=1)
 
 # jeu de precision sur 5 tests
-scores = cross_val_score(clf, X, Y, cv=5)
+scores = cross_val_score(clf, X, Y, cv=6)
 print("scores : ", scores)
 
 precision = "{0:.2f}".format(scores.mean())
@@ -67,6 +68,7 @@ ecart_type = "{0:.2f}".format(scores.std()*2)
 print("ecart_type (confidence interval) : ", ecart_type)
 
 print('')
+
 
 
 # rappel = nombre de doc correctement attribués a la classe i / nombre de doc de classe i

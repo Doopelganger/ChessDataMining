@@ -18,10 +18,10 @@ import parser
 from parser import *
 
 # donnes de jeu -- fichier pgn
-pgn = open("data/pgn/large.pgn")
+pgn = open("data/pgn/testElo.pgn")
 
 # fichier de sortie avec les tables
-output = open("data/output/test2", "w")
+output = open("data/output/testElo", "w")
 
 # moteur  Oracle
 engine = chess.uci.popen_engine("stockfish/Linux/stockfish_8_x64")
