@@ -48,7 +48,7 @@ class SupportVecteurMachine:
         code = labelEncoder.fit_transform(label)
         return code
     
-    def classify(self, vectors, classes, features):
+    def classify(self, vectors, classes, output):
         """
         Lecture du fichier
         """
@@ -58,6 +58,7 @@ class SupportVecteurMachine:
         # traits
         X = data[:,-1]
         
+        outfile = open(output, 'a')
         """
         Decoupage des donnees - 30% training | 70% test
         """
@@ -85,15 +86,15 @@ class SupportVecteurMachine:
         report = classification_report(y_test, svm_kernel_predict,target_names=classes)
         
         # affichage resultats
-        print('+'*50)
-        print("Classifieur : SVM linear kernel")
-        print("Precision sur 5 tests :", cross)
-        print("Precision_moyenne : %0.2f (+/- %0.2f)" %(avg_prec, ecart))
-        print("Matrice de confusion : ", matrix)
-        print("Aire sous ROC : ", score_ROC)
-        print("Rapport Eval :", report)
-        print('+'*50)
-        print(''*50)
+        print('+'*50, file = outfile)
+        print("Classifieur : SVM linear kernel", file = outfile)
+        print("Precision sur 5 tests :", cross, file = outfile)
+        print("Precision_moyenne : %0.2f (+/- %0.2f)" %(avg_prec, ecart), file = outfile)
+        print("Matrice de confusion : ", matrix, file = outfile)
+        print("Aire sous ROC : ", score_ROC, file = outfile)
+        print("Rapport Eval :", report, file = outfile)
+        print('+'*50, file = outfile)
+        print(''*50, file = outfile)
         
         
         #####################################################################
@@ -115,15 +116,15 @@ class SupportVecteurMachine:
         report = classification_report(y_test, svm_lsvc_predict,target_names=classes)
         
         # affichage resultats
-        print('+'*50)
-        print("Classifieur : SVM linear SVC")
-        print("Precision sur 5 tests :", cross)
-        print("Precision_moyenne : %0.2f (+/- %0.2f)" %(avg_prec, ecart))
-        print("Matrice de confusion : ", matrix)
-        print("Aire sous ROC : ", score_ROC)
-        print("Rapport Eval :", report)
-        print('+'*50)
-        print(''*50)
+        print('+'*50, file = outfile)
+        print("Classifieur : SVM linear SVC", file = outfile)
+        print("Precision sur 5 tests :", cross, file = outfile)
+        print("Precision_moyenne : %0.2f (+/- %0.2f)" %(avg_prec, ecart), file = outfile)
+        print("Matrice de confusion : ", matrix, file = outfile)
+        print("Aire sous ROC : ", score_ROC, file = outfile)
+        print("Rapport Eval :", report, file = outfile)
+        print('+'*50, file = outfile)
+        print(''*50, file = outfile)
         
         
         #####################################################################
@@ -145,15 +146,15 @@ class SupportVecteurMachine:
         report = classification_report(y_test, gauss_predict,target_names=classes)
         
         # affichage resultats
-        print('+'*50)
-        print("Classifieur : SVM SVC gaussien")
-        print("Precision sur 5 tests :", cross)
-        print("Precision_moyenne : %0.2f (+/- %0.2f)" %(avg_prec, ecart))
-        print("Matrice de confusion : ", matrix)
-        print("Aire sous ROC : ", score_ROC)
-        print("Rapport Eval :", report)
-        print('+'*50)
-        print(''*50)
+        print('+'*50, file = outfile)
+        print("Classifieur : SVM SVC gaussien", file = outfile)
+        print("Precision sur 5 tests :", cross, file = outfile)
+        print("Precision_moyenne : %0.2f (+/- %0.2f)" %(avg_prec, ecart), file = outfile)
+        print("Matrice de confusion : ", matrix, file = outfile)
+        print("Aire sous ROC : ", score_ROC, file = outfile)
+        print("Rapport Eval :", report, file = outfile)
+        print('+'*50, file = outfile)
+        print(''*50, file = outfile)
         
         
         #####################################################################
@@ -175,15 +176,16 @@ class SupportVecteurMachine:
         report = classification_report(y_test, poly_predict,target_names=classes)
         
         # affichage resultats
-        print('+'*50)
-        print("Classifieur : SVM SVC polynomial")
-        print("Precision sur 5 tests :", cross)
-        print("Precision_moyenne : %0.2f (+/- %0.2f)" %(avg_prec, ecart))
-        print("Matrice de confusion : ", matrix)
-        print("Aire sous ROC : ", score_ROC)
-        print("Rapport Eval :", report)
-        print('+'*50)
-        print(''*50)
+        print('+'*50, file = outfile)
+        print("Classifieur : SVM SVC polynomial", file = outfile)
+        print("Precision sur 5 tests :", cross, file = outfile)
+        print("Precision_moyenne : %0.2f (+/- %0.2f)" %(avg_prec, ecart), file = outfile)
+        print("Matrice de confusion : ", matrix, file = outfile)
+        print("Aire sous ROC : ", score_ROC, file = outfile)
+        print("Rapport Eval :", report, file = outfile)
+        print('+'*50, file = outfile)
+        print(''*50, file = outfile)
         
         
         #####################################################################
+        outfile.close()

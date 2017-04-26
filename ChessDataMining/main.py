@@ -103,7 +103,7 @@ def main():
         # print(gamedic[g]['white'])
         # white = gamedic[g]['white']
         # black = gamedic[g]['black']
-        print("game")
+        print("traitement game", cp, '...')
         # ouverture             
         eco = gamedic[g]['eco']
         # rankings elo
@@ -483,7 +483,10 @@ def main():
                 
             if(player == 'W'):
                 if(score_player == 0 or score_oracle == 0):
-                    dist_W = max(int(score_oracle), int(score_player))
+                    if(score_player > 0 or score_oracle > 0):
+                        dist_W = max(int(score_oracle), int(score_player))
+                    elif(score_player < 0 or score_oracle < 0):
+                        dist_W = min(int(score_oracle), int(score_player))
                 else:    
                     dist_W = int(score_oracle) - int(score_player)
                 if nb_moves == 1:
@@ -516,28 +519,54 @@ def main():
             
             # moy distance sur 10 coups
             if(nb_W == 10 and player == 'W'):
-                dist10_W = dist_W/10
+                if(dist_W ==0):   
+                    dist10_W = dist_W/10
+                else:
+                    dist10_W =0
             if(nb_B == 10 and player == 'B'):
-                dist10_B = dist_B/10
+                if(dist_B == 0):
+                    dist10_B = dist_B/10
+                else:    
+                    dist10_B = 0
                 
             # moy distance sur 25 coups
             if(nb_W == 25 and player == 'W'):
-                dist25_W = dist_W/25
+                if(dist_W ==0):   
+                    dist25_W = dist_W/25
+                else:
+                    dist25_W =0
             if(nb_B == 25 and player == 'B'):
-                dist25_B = dist_B/25
+                if(dist_B == 0):
+                    dist25_B = dist_B/25
+                else:    
+                    dist25_B = 0
 
           
         # moyenne du score Oracle pour chaque joueur
-        moy_oracle_W = float("{0:.2f}".format(best_W / nb_W))
-        moy_oracle_B = float("{0:.2f}".format(best_B / nb_B))
-        
+        if(best_W != 0):
+            moy_oracle_W = float("{0:.2f}".format(best_W / nb_W))
+        else:
+            moy_oracle_W = 0.0
+            
+        if(best_B != 0):
+            moy_oracle_B = float("{0:.2f}".format(best_B / nb_B))
+        else:
+            moy_oracle_B = 0.0
+            
         serie_W = max(maxW, serie_W)        
         serie_B = max(maxB, serie_B)     
         
         # moyenne de la distance entre les scores des joueurs et l'oracle 
-        dist_W = float("{0:.2f}".format(dist_W / nb_W))
-        dist_B = float("{0:.2f}".format(dist_B / nb_B))
-    
+        if(dist_W != 0):        
+            dist_W = float("{0:.2f}".format(dist_W / nb_W))
+        else :
+            dist_W = 0
+        
+        if(dist_B != 0):
+            dist_B = float("{0:.2f}".format(dist_B / nb_B))
+        else:
+            dist_B = 0
+           
         e_dist_W = 0 
         e_dist_B = 0
         
@@ -655,7 +684,8 @@ def main():
         
         elos30.write(str(white_elo) +'\n')        
         elos30.write(str(black_elo) +'\n')
-                
+        
+        print('done.')        
         print(' ')
     
     result5.close()
@@ -707,7 +737,9 @@ def classify():
                "ratio10B", "ratio20B", "moves_Q", "attacks", "castling", "timer_castling"]
     
     
-    classes = ['Master', 'nonMaster']
+    classes = ['Master', 'not_Master']
+    
+    vectors = "data/vectors/vectors.txt"
     
     vectors5f = "data/vectors/vectors_5f.txt"
     vectors10f = "data/vectors/vectors_10f.txt"
@@ -715,6 +747,11 @@ def classify():
     vectors20f = "data/vectors/vectors_20f.txt"
     vectors30f = "data/vectors/vectors_30f.txt"
     
+    outfile5 = "data/classification/result5.txt"
+    outfile10 = "data/classification/result10.txt"
+    outfile15 = "data/classification/result15.txt"
+    outfile20 = "data/classification/result20.txt"
+    outfile30 = "data/classification/result30.txt"
     """
     Init des classifieurs
     """        
@@ -729,35 +766,51 @@ def classify():
     ########################
     ## arbres de decision ##
     ########################
-    
-    arbre.classify(vectors5f, classes, list5f)    
-    
+
+    arbre.classify(vectors5f, classes, outfile5)    
+    arbre.classify(vectors10f, classes, outfile10)
+    arbre.classify(vectors15f, classes, outfile15)  
+    arbre.classify(vectors20f, classes, outfile20) 
+    arbre.classify(vectors30f, classes, outfile30) 
     ########################
     ##  classifieurs SVM  ##
     ########################     
-    
-    svm.classify(vectors5f, classes, list5f)
+ 
+    svm.classify(vectors5f, classes, outfile5)    
+    svm.classify(vectors10f, classes, outfile10)
+    svm.classify(vectors15f, classes, outfile15) 
+    svm.classify(vectors20f, classes, outfile20)  
+    svm.classify(vectors30f, classes, outfile30)
     
     ########################
     ## classifieurs kppv  ##
     ########################   
     
-    kppv.classify(vectors5f, classes, list5f)
+    kppv.classify(vectors5f, classes, outfile5)    
+    kppv.classify(vectors10f, classes, outfile10)
+    kppv.classify(vectors15f, classes, outfile15)  
+    kppv.classify(vectors20f, classes, outfile20) 
+    kppv.classify(vectors30f, classes, outfile30)
     
     ########################
     ##  classifieurs NB   ##
     ######################## 
 
-    naif.classify(vectors5f, classes, list5f)
+    naif.classify(vectors5f, classes, outfile5)  
+    naif.classify(vectors10f, classes, outfile10)
+    naif.classify(vectors15f, classes, outfile15)  
+    naif.classify(vectors20f, classes, outfile20) 
+    naif.classify(vectors30f, classes, outfile30)
     
     ########################
     ##  arbre avec graph  ##
     ######################## 
-    
-    tree_graph.classify(vectors5f, classes, list5f)
 
+    tree_graph.classify(vectors, classes, list5f)
+    print("arbre genere : data/tree")
+    
+    print('++ classifications effectuees : consulter les resultats dans : data/classification ++')
 
 if __name__ == "__main__":
     # pour changer l'action de main, utiliser les mots cles : build(), main(), classify()
-    #main()
     classify()

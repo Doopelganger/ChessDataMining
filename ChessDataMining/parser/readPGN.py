@@ -22,12 +22,12 @@ class ReadPGN:
         base = {}    
         
         idgame = 0    
-        
+        cp=0
         while(execute):
             try:
-                    
+                cp+=1
                 current = chess.pgn.read_game(pgn);
-            
+                print("game #", cp)
                 # test pour arreter le parcours du fichier
                 if (current == None):
                     execute = False
@@ -47,7 +47,7 @@ class ReadPGN:
                     blackname = current.headers['Black'].lower()
                     if blackname == "":
                         blackname = "john, doe"
-                        
+                    print(blackname)
                     
                     whitename = whitename.split(",")
                     blackname = blackname.split(",")
@@ -92,7 +92,7 @@ class ReadPGN:
                     
                     cpt = 0            
         
-        
+                    print(' ')
         #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
         
                     while not node.is_end():
@@ -122,11 +122,9 @@ class ReadPGN:
                         for p in pgn_move:
                             if p == "=":
                                 pgn_move = pgn_move[:-2]
-                                print(pgn_move)
                                 
                         if pgn_move[-1] == "=":
                             pgn_move = pgn_move[:-1]
-                            print(pgn_move)
                         move = chess.Move.uci(next_node.move)
 
                         fullmove = {}

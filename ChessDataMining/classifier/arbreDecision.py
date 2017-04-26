@@ -46,7 +46,7 @@ class ArbreDecision:
         code = labelEncoder.fit_transform(label)
         return code
     
-    def classify(self, vectors, classes, features):
+    def classify(self, vectors, classes, output):
         """
         Lecture du fichier
         """
@@ -55,7 +55,8 @@ class ArbreDecision:
         y = data[:,0:-1]
         # traits
         X = data[:,-1]
-        
+
+        outfile = open(output, 'w')
         """
         Decoupage des donnees - 30% training | 70% test
         """
@@ -79,15 +80,16 @@ class ArbreDecision:
         report = classification_report(y_test, entropy_predict,target_names=classes)
         
         # affichage resultats
-        print('+'*50)
-        print("Classifieur : Arbre de Decision avec Entropie de Shannon")
-        print("Precision sur 5 tests :", cross)
-        print("Precision_moyenne : %0.2f (+/- %0.2f)" %(avg_prec, ecart))
-        print("Matrice de confusion : ", matrix)
-        print("Aire sous ROC : ", score_ROC)
-        print("Rapport Eval :", report)
-        print('+'*50)
-        print(''*50)
+        
+        print('+'*50, file = outfile)
+        print("Classifieur : Arbre de Decision avec Entropie de Shannon", file = outfile)
+        print("Precision sur 5 tests :", cross, file = outfile)
+        print("Precision_moyenne : %0.2f (+/- %0.2f)" %(avg_prec, ecart), file = outfile)
+        print("Matrice de confusion : ", matrix, file = outfile)
+        print("Aire sous ROC : ", score_ROC, file = outfile)
+        print("Rapport Eval :", report, file = outfile)
+        print('+'*50, file = outfile)
+        print(''*50, file = outfile)
         
         
         #####################################################################
@@ -110,15 +112,17 @@ class ArbreDecision:
         report = classification_report(y_test, gini_predict,target_names=classes)
         
         # affichage resultats
-        print('+'*50)
-        print("Classifieur : Arbre de Decision avec index de Gini")
-        print("Precision sur 5 tests :", cross)
-        print("Precision_moyenne : %0.2f (+/- %0.2f)" %(avg_prec, ecart))
-        print("Matrice de confusion : ", matrix)
-        print("Aire sous ROC : ", score_ROC)
-        print("Rapport Eval :", report)
-        print('+'*50)
-        print(''*50)
+        print('+'*50, file = outfile)
+        print("Classifieur : Arbre de Decision avec index de Gini", file = outfile)
+        print("Precision sur 5 tests :", cross, file = outfile)
+        print("Precision_moyenne : %0.2f (+/- %0.2f)" %(avg_prec, ecart), file = outfile)
+        print("Matrice de confusion : ", matrix, file = outfile)
+        print("Aire sous ROC : ", score_ROC, file = outfile)
+        print("Rapport Eval :", report, file = outfile)
+        print('+'*50, file = outfile)
+        print(''*50, file = outfile)
+        
+        outfile.close()
         
         
         #####################################################################
